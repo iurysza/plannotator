@@ -5,3 +5,4 @@ minimumReleaseAgeExcludes = ["@pierre/diffs", "@plannotator/atomic-editor", "@pl
 
 [test]
 preload = ["./packages/ui/test-setup/happy-dom.ts"]
+pathIgnorePatterns = [".agents/**"]
