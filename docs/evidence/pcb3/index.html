@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PR 2862 composer coverage</title>
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #1c1915;
+    --muted: #5c564c;
+    --line: #e4dcd0;
+    --paper: #f6f1e8;
+    --card: #fffdf9;
+    --before: #8a4b2f;
+    --after: #1f6b4a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 16px/1.5 "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+  }
+  header, main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+  header { padding: 40px 0 12px; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; margin: 36px 0 8px; }
+  p { margin: 0 0 12px; }
+  .lede { font-size: 18px; max-width: 68ch; }
+  .meta { color: var(--muted); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 13px; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.86em; }
+  .verdict {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin: 18px 0 8px;
+  }
+  .verdict strong { font-family: ui-sans-serif, system-ui, sans-serif; }
+  .pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 12px 0 28px;
+  }
+  figure {
+    margin: 0;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  figcaption {
+    padding: 10px 12px 12px;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 13px;
+  }
+  figcaption b { display: block; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px; margin-bottom: 3px; }
+  .before b { color: var(--before); }
+  .after b { color: var(--after); }
+  img { display: block; width: 100%; height: auto; background: #efeae2; }
+  .note { color: var(--muted); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; max-width: 78ch; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 13px; }
+  th, td { border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; padding: 8px 10px; }
+  th { font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+  footer { padding: 12px 0 48px; color: var(--muted); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 13px; }
+  @media (max-width: 800px) { .pair { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
+</style>
+</head>
+<body>
+<header>
+  <p class="meta">Plannotator Inbox · PR 2862 · evidence only</p>
+  <h1>The reply composer reached global comments, and stopped there.</h1>
+  <p class="lede">Same fixture, light theme, and interaction, at the frozen pull-request base and head. The reference is the normal Inbox reply, which already attached a file and showed a dictation mic. Global comments on Markdown, guided review, and code review now use that composer. HTML global, selections, line comments, image comments, and question answers do not.</p>
+  <p class="meta">Before <code>72b00e0dd6b9a5a6f87139ff9b0161eeac1ad0e5</code><br>After <code>b73a7c306c5ed9a2a89848485ac7a6ff05014d8f</code></p>
+  <div class="verdict">
+    <strong>Staging holds.</strong>
+    On the after build, Add on a Markdown global comment kept <code>paste.png</code> in the comments list, and Send wrote the file into the stored reply. On the before build the same Add and Send wrote the sentence only. The mic in these pictures is disabled: voice was on, no API key was configured, and no recording or transcription ran.
+  </div>
+</header>
+<main>
+  <h2>Markdown global comment</h2>
+  <p class="note">Wide layout. Empty composition first, then the file in the field, then what Send stored.</p>
+  <div class="pair">
+    <figure class="before">
+      <img src="markdown-global-empty-before-crop.png" alt="Before: a small Global Comment box with a textarea and an Add button">
+      <figcaption><b>Before</b>Text area and Add. No paperclip, no microphone.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="markdown-global-empty-after-crop.png" alt="After: global comment field with a paperclip, a disabled microphone, and an Add button">
+      <figcaption><b>After</b>Paperclip, disabled dictation mic, and the API-key note.</figcaption>
+    </figure>
+  </div>
+  <div class="pair">
+    <figure class="before">
+      <img src="markdown-global-media-before-crop.png" alt="Before: the same plain global comment box, still with no attachment control">
+      <figcaption><b>Before</b>No inbox attach control, so the file cannot be staged.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="markdown-global-media-after-crop.png" alt="After: paste.png attached in the global comment composer">
+      <figcaption><b>After</b><code>paste.png</code> attached through the file input. Clipboard paste was not used.</figcaption>
+    </figure>
+  </div>
+  <div class="pair">
+    <figure class="before">
+      <img src="markdown-global-sent-before.png" alt="Before: sent reply contains the comment text and no file">
+      <figcaption><b>Before · after Send</b>The reply contains the sentence and no file line.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="markdown-global-sent-after.png" alt="After: sent reply contains the comment text, paste.png, and an image preview">
+      <figcaption><b>After · after Send</b>The reply lists <code>paste.png</code> and shows the image preview.</figcaption>
+    </figure>
+  </div>
+
+  <h2>Narrow Markdown global comment</h2>
+  <div class="pair">
+    <figure class="before">
+      <img src="markdown-global-empty-narrow-before-crop.png" alt="Before on a phone-width layout: plain global comment sheet">
+      <figcaption><b>Before · 390px</b>Sheet with a textarea and Add.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="markdown-global-empty-narrow-after-crop.png" alt="After on a phone-width layout: composer with paperclip and microphone">
+      <figcaption><b>After · 390px</b>Same composer: paperclip and blocked mic.</figcaption>
+    </figure>
+  </div>
+
+  <h2>Guided review and code review</h2>
+  <p class="note">The header global comment changed. A line comment, opened by dragging a changed line, did not.</p>
+  <div class="pair">
+    <figure class="before">
+      <img src="guide-global-empty-before-crop.png" alt="Before: plain global comment popover on a guided review">
+      <figcaption><b>Before · guide global</b>Add only.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="guide-global-empty-after-crop.png" alt="After: guided review global comment with paperclip and microphone">
+      <figcaption><b>After · guide global</b>Paperclip and blocked mic. The file tile is in <code>guide-global-media-after.png</code>.</figcaption>
+    </figure>
+  </div>
+  <div class="pair">
+    <figure class="before">
+      <img src="review-global-empty-before-crop.png" alt="Before: plain global comment popover on a code review">
+      <figcaption><b>Before · review global</b>Add only.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="review-global-empty-after-crop.png" alt="After: code review global comment with paperclip and microphone">
+      <figcaption><b>After · review global</b>Same composer as the guide.</figcaption>
+    </figure>
+  </div>
+  <div class="pair">
+    <figure class="before">
+      <img src="guide-line-empty-before.png" alt="Before: line comment toolbar reading Leave feedback">
+      <figcaption><b>Before · guide line</b>"Leave feedback…", suggested code, Add Comment.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="guide-line-empty-after.png" alt="After: the same line comment toolbar">
+      <figcaption><b>After · guide line</b>Unchanged. No paperclip and no mic. The review line matches it.</figcaption>
+    </figure>
+  </div>
+
+  <h2>HTML document</h2>
+  <p class="note">The status card is a real HTML attachment. Neither revision shows a Global comment button. Selecting the paragraph opens the old comment popover on both.</p>
+  <div class="pair">
+    <figure class="before">
+      <img src="html-no-global-button-before.png" alt="Before: HTML status card open beside the thread, with no Global comment button">
+      <figcaption><b>Before</b>Document open. Comments panel says to select text. No global control.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="html-no-global-button-after.png" alt="After: the same HTML card still has no Global comment button">
+      <figcaption><b>After</b>Still no opener. The provider is mounted and the button is hidden.</figcaption>
+    </figure>
+  </div>
+  <div class="pair">
+    <figure class="before">
+      <img src="html-selection-empty-before.png" alt="Before: selection comment on the HTML card">
+      <figcaption><b>Before · selection</b>"Add a comment…", a small image button, Save. No mic.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="html-selection-empty-after.png" alt="After: the same selection comment on the HTML card">
+      <figcaption><b>After · selection</b>Unchanged. The image button is the old popover, not inbox upload.</figcaption>
+    </figure>
+  </div>
+  <div class="pair">
+    <figure class="before">
+      <img src="html-no-global-button-narrow-before.png" alt="Before at 390 pixels: HTML card and a toolbar without a global comment control">
+      <figcaption><b>Before · 390px</b>Back, pen, comments, pager, more. No global comment.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="html-no-global-button-narrow-after.png" alt="After at 390 pixels: the same toolbar without a global comment control">
+      <figcaption><b>After · 390px</b>Same toolbar. The gap is still there.</figcaption>
+    </figure>
+  </div>
+
+  <h2>Other free-text fields that stayed plain</h2>
+  <div class="pair">
+    <figure class="before">
+      <img src="markdown-inline-empty-before-crop.png" alt="Before: markdown selection comment">
+      <figcaption><b>Before · Markdown selection</b>Add a comment, Save.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="markdown-inline-empty-after-crop.png" alt="After: the same markdown selection comment">
+      <figcaption><b>After · Markdown selection</b>Unchanged. Message selection matches it.</figcaption>
+    </figure>
+  </div>
+  <div class="pair">
+    <figure class="before">
+      <img src="code-comment-empty-before-crop.png" alt="Before: code line comment popover">
+      <figcaption><b>Before · code line</b>Add a comment, Save. No files.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="code-comment-empty-after-crop.png" alt="After: the same code line comment popover">
+      <figcaption><b>After · code line</b>Unchanged.</figcaption>
+    </figure>
+  </div>
+  <div class="pair">
+    <figure class="before">
+      <img src="image-comment-empty-before.png" alt="Before: comment field under an image attachment">
+      <figcaption><b>Before · image</b>"Comment on this image…", Mark up, Comment.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="image-comment-empty-after.png" alt="After: the same image comment field">
+      <figcaption><b>After · image</b>Unchanged, including the 390px shot.</figcaption>
+    </figure>
+  </div>
+  <div class="pair">
+    <figure class="before">
+      <img src="question-controls-before.png" alt="Before: a choice question and a free-text question">
+      <figcaption><b>Before · questions</b>Choice radios are not a composer. The open question is a plain answer box.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="question-controls-after.png" alt="After: the same two questions">
+      <figcaption><b>After · questions</b>Unchanged. No mic on the answer.</figcaption>
+    </figure>
+  </div>
+
+  <h2>Reference: the thread reply already had the composer</h2>
+  <div class="pair">
+    <figure class="before">
+      <img src="thread-reply-media-before.png" alt="Before: thread reply with paste.png attached">
+      <figcaption><b>Before</b><code>paste.png</code> on the normal reply, with the blocked mic.</figcaption>
+    </figure>
+    <figure class="after">
+      <img src="thread-reply-media-after.png" alt="After: thread reply with paste.png attached">
+      <figcaption><b>After</b>The reply composer is unchanged. Draft restore is in <code>thread-reply-draft-*.png</code>.</figcaption>
+    </figure>
+  </div>
+
+  <h2>Short matrix</h2>
+  <table>
+    <thead>
+      <tr><th>Surface</th><th>Before</th><th>After</th><th>File survives Send</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Thread reply</td><td>Full composer</td><td>Full composer</td><td>Already true; draft restore checked</td></tr>
+      <tr><td>Markdown, guide, and review global</td><td>Text and Add</td><td>Full composer</td><td>Checked on Markdown</td></tr>
+      <tr><td>HTML global</td><td>No button</td><td>No button</td><td>No composer to send</td></tr>
+      <tr><td>Selections, line comments, image notes, free-text question</td><td>Plain text</td><td>Plain text</td><td>Not the new path</td></tr>
+    </tbody>
+  </table>
+  <p class="note" style="margin-top:16px">Full notes, the frozen SHAs, and the exercised / simulated / untested list are in <a href="REPORT.md">REPORT.md</a>.</p>
+</main>
+<footer>
+  Scratch Inbox only. No personal mail. Voice posts recorded by the capture server: 0 before, 0 after.
+</footer>
+</body>
+</html>
