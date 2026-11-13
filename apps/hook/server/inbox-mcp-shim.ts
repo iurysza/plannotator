@@ -15,7 +15,7 @@
  * inside one (`inboxHostSessionFromEnv`: a Claude Code session's
  * `PLANNOTATOR_SESSION_TAG`, a Pi bash call's `PI_SESSION_ID`), so a script or
  * command the session runs sends as that session, exactly as its
- * `plannotator_inbox` tool does: the same author, the same default thread, and
+ * `plannotator_inbox` tool does: the same author, the same threads, and
  * the person's reply wakes it. A Codex session is its thread: Codex names it
  * on every tool call (`params._meta.threadId`, from the `codex-mcp-client`)
  * and in the commands its shell runs (`CODEX_THREAD_ID`), and the shim sends
@@ -44,6 +44,9 @@ import {
   INBOX_CODEX_HOST,
   INBOX_CODEX_NAME,
   INBOX_HOST_NAMES,
+  INBOX_MUSE_HOST,
+  INBOX_MUSE_NAME,
+  INBOX_MUSE_SESSION_ENV,
   INBOX_QWEN_HOST,
   INBOX_QWEN_NAME,
   INBOX_QWEN_SESSION_ENV,
@@ -66,13 +69,13 @@ import { INBOX_MAX_REQUEST_BYTES, inboxRequestTooLargeMessage } from "@plannotat
 import { statSync } from "node:fs";
 import { isAbsolute } from "node:path";
 
-const FILLED_TOOLS = new Set(["send_message", "read_thread", "submit_guide", "card", "steps"]);
+const FILLED_TOOLS = new Set(["send_message", "read_thread", "submit_guide", "card", "steps", "thread_pulls"]);
 /** The filled tools that take no project: thread steps name their thread (the schema is strict, so no `project_path`). */
 const NO_PROJECT_TOOLS = new Set(["steps"]);
 /** The tools that take the project but no session: search (its schema is strict, so no `agent_session`). */
 const PROJECT_ONLY_TOOLS = new Set(["search"]);
-/** The tools that record an author, and so take `agent_host` / `agent_name` (their schemas are strict). A card records who made and moved it. */
-const AUTHOR_TOOLS = new Set(["send_message", "submit_guide", "card", "steps"]);
+/** The tools that record an author, and so take `agent_host` / `agent_name` (their schemas are strict). A card records who made and moved it; a thread's PRs, who added each. */
+const AUTHOR_TOOLS = new Set(["send_message", "submit_guide", "card", "steps", "thread_pulls"]);
 
 /**
  * The hosts whose sessions a reply wakes, with the name each one's
@@ -129,6 +132,8 @@ export function inboxHostSessionFromEnv(env: Record<string, string | undefined>)
   if (isCodexThreadId(codex)) return { host: INBOX_CODEX_HOST, session: codex, name: INBOX_CODEX_NAME };
   const qwen = env[INBOX_QWEN_SESSION_ENV];
   if (isQwenSessionId(qwen)) return { host: INBOX_QWEN_HOST, session: qwen, name: INBOX_QWEN_NAME };
+  const muse = env[INBOX_MUSE_SESSION_ENV];
+  if (isInboxSessionId(muse)) return { host: INBOX_MUSE_HOST, session: muse, name: INBOX_MUSE_NAME };
   // DeepSeek Harness sets DSH_SESSION_ID with DSH_SHELL=1 in every model shell. Only there: the person's own
   // terminal in DSH Web gets DSH_SESSION_ID without DSH_SHELL, and whatever runs in it is not that session.
   // Last, and only when no other agent's marker is there: every process started from a DSH shell inherits

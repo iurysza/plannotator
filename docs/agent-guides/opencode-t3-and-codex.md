@@ -119,6 +119,10 @@ order, `list` named it `2 files: notes.md, mock.html`, its feedback arrived
 headed `— Feedback · 2 comments.` under `Files: notes.md, mock.html`, and
 `close all` closed a second bundle.
 
+### OpenCode 2: sessions the Inbox starts
+
+In a server the Inbox started (`PLANNOTATOR_INBOX_LAUNCHED=1`), the plugin's wake watches each root session as it is created (`session.created`), not only once it ran, so the Inbox's first message reaches a session that has had no turn; with `PLANNOTATOR_INBOX_LAUNCHED_SESSION` it watches that session from the start (a restart). The rest is "OpenCode" in `inbox-launch.md`. Test: `inbox-v2-wake.test.ts` "OpenCode 2 started by the Inbox".
+
 ### OpenCode 2: the installer updates a running service's plugin
 
 The OpenCode 2 service keeps the plugin it loaded. When it is running with an
@@ -184,9 +188,10 @@ documents it); its help leads with that setup.
   `HIDDEN_SUBCOMMANDS`; `t3` is not.
 - **The gate (per Bash call cost):** the hook runs on every Bash call of every
   Claude session that loads the settings file. The command is
-  `case "$CLAUDE_CODE_ENTRYPOINT" in sdk*) PLANNOTATOR_DATA_DIR=… '<binary>' t3-hook;; esac`
+  `case "$CLAUDE_CODE_ENTRYPOINT" in sdk*|t3-code) PLANNOTATOR_DATA_DIR=… '<binary>' t3-hook;; esac`
   (`t3HookCommand`, `packages/shared/t3-hook-command.ts`): only an Agent SDK
-  session (`sdk-ts`, …) starts the binary; an interactive `claude` (`cli`)
+  session (T3 names itself `t3-code`; other SDK apps report `sdk-ts`, …)
+  starts the binary; an interactive `claude` (`cli`)
   is answered by the shell with no output (~3 ms instead of ~290 ms of CLI
   startup). The binary repeats the check as the first statement of
   `apps/hook/server/index.ts` and in `prepareT3Hook`. Inside an SDK session
